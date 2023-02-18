@@ -7,7 +7,7 @@ video = cv2.VideoCapture('/home/jawabreh/Desktop/HumaneX '
 
 # Get the total number of frames and calculate the interval between frames to capture
 total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-frame_interval = round(total_frames / 500)
+frame_interval = round(total_frames / 100)
 
 # Initialize variables
 frame_count = 0
