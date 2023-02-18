@@ -1,13 +1,12 @@
 import cv2
+import math
 
 # Open the video file
-video = cv2.VideoCapture('/home/jawabreh/Desktop/HumaneX '
-                         'Project/Products/FaceRecognition/FR_Dataset/Team_Videos_Dataset/Ahmad_Video_Dataset'
-                         '/Ahmad_Vid1.MOV')
+video = cv2.VideoCapture('./Oguzhan_Vid1.MOV')
 
 # Get the total number of frames and calculate the interval between frames to capture
 total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-frame_interval = round(total_frames / 100)
+frame_interval = math.ceil(total_frames / 500)
 
 # Initialize variables
 frame_count = 0
@@ -31,8 +30,19 @@ while success:
 
             # Save the image
             cv2.imwrite(
-                "/home/jawabreh/Desktop/HumaneX Project/Products/FaceRecognition/FR_Dataset/Team_Faces_Dataset"
-                "/Ahmad_Face_Dataset/{}.jpg".format(image_count), image)
+                "./ok/{}.jpg".format(image_count), image)
 
-# Release the video object
+            if image_count == 500:
+                break
+
+    # Jugaaaaaaar
+    if frame_count == total_frames and image_count < 500:
+        video.set(cv2.CAP_PROP_POS_FRAMES, total_frames-1)
+        _, image = video.read()
+
+        while image_count < 500:
+            image_count += 1
+            cv2.imwrite(
+                "./ok/{}.jpg".format(image_count), image)
+
 video.release()
