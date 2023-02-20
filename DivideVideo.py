@@ -1,20 +1,21 @@
 import cv2
-import math
 
 # Open the video file
-video = cv2.VideoCapture('./Oguzhan_Vid1.MOV')
+video = cv2.VideoCapture('./ok.MOV')
 
-# Get the total number of frames and calculate the interval between frames to capture
 total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-frame_interval = math.ceil(total_frames / 500)
 
-# Initialize variables
+
+desired_frames = 500
+frame_interval = max(total_frames // desired_frames, 1)  
+
+
 frame_count = 0
 image_count = 0
 success = True
 
 # Loop through the video frames
-while success:
+while success and image_count < desired_frames:
     # Read the next frame
     success, image = video.read()
 
@@ -32,17 +33,16 @@ while success:
             cv2.imwrite(
                 "./ok/{}.jpg".format(image_count), image)
 
-            if image_count == 500:
-                break
-
-    # Jugaaaaaaar
-    if frame_count == total_frames and image_count < 500:
+    if not success and image_count < desired_frames:
         video.set(cv2.CAP_PROP_POS_FRAMES, total_frames-1)
         _, image = video.read()
 
-        while image_count < 500:
+        while image_count < desired_frames:
             image_count += 1
             cv2.imwrite(
                 "./ok/{}.jpg".format(image_count), image)
+
+    if not success and image_count == desired_frames:
+        break
 
 video.release()
