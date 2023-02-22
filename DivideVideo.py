@@ -1,48 +1,46 @@
 import cv2
+import os
 
-# Open the video file
-video = cv2.VideoCapture('./ok.MOV')
+# Input Path
+video_path = '//home/jawabreh/Desktop/HumaneX Project/Products/FR/FR_Dataset/Team_Videos_Scan/Ahmad_Video_Scan/Ahmad_Vid1.mp4'
 
-total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
+# Output Path
+output_dir = '/home/jawabreh/Desktop/HumaneX Project/Products/FR/FR_Dataset/Team_Scan_Dataset/Ahmad_Scan_Dataset'
 
+# Create the output directory if it doesn't exist
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
 
-desired_frames = 500
-frame_interval = max(total_frames // desired_frames, 1)  
+# Create a VideoCapture object to read the input video
+cap = cv2.VideoCapture(video_path)
 
+# Get the total number of frames in the video
+total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
-frame_count = 0
-image_count = 0
-success = True
+# Calculate the frame interval to capture for 150 images
+frame_interval = total_frames // 150 # change this number according to your needs 
 
-# Loop through the video frames
-while success and image_count < desired_frames:
-    # Read the next frame
-    success, image = video.read()
+# Set the initial frame counter to 0
+frame_counter = 0
 
-    # Only process frames that were read successfully
-    if success:
-        # Increment the frame counter
-        frame_count += 1
-
-        # Only save frames at the desired intervals
-        if frame_count % frame_interval == 0:
-            # Increment the image counter
-            image_count += 1
-
-            # Save the image
-            cv2.imwrite(
-                "./ok/{}.jpg".format(image_count), image)
-
-    if not success and image_count < desired_frames:
-        video.set(cv2.CAP_PROP_POS_FRAMES, total_frames-1)
-        _, image = video.read()
-
-        while image_count < desired_frames:
-            image_count += 1
-            cv2.imwrite(
-                "./ok/{}.jpg".format(image_count), image)
-
-    if not success and image_count == desired_frames:
+while cap.isOpened():
+    # Read a frame from the video
+    ret, frame = cap.read()
+    
+    if not ret:
+        break
+    
+    # Check if this is the frame to capture
+    if frame_counter % frame_interval == 0 and frame_counter // frame_interval < 150:
+        # Save the frame as a JPEG image
+        output_path = os.path.join(output_dir, f'{frame_counter//frame_interval + 1:03}.jpg')
+        cv2.imwrite(output_path, frame)
+    
+    # Increment the frame counter
+    frame_counter += 1
+    
+    if frame_counter >= total_frames:
         break
 
-video.release()
+# Release the video capture object
+cap.release()
