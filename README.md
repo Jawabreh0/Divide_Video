@@ -1,4 +1,4 @@
-# Divide Video
+# Video Frames Splitter
 This is a simple Python script that can be used to convert an AI training video into a collection of JPEG images. The script utilizes the OpenCV library to extract frames from the video and save them as images.
 
 
